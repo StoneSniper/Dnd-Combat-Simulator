@@ -42,7 +42,421 @@ def attack_roll_enemy():
     if att_en>=ally[1]:
         ally[0]-=att_dam_en
     del att_en
+    del att_dam_enimport random
+import sys
+#order is [0]health, [1]ac, [2]number of attacks per round, [3]bonus to attack roll, [4]damage of attack max, [5]damage of attack min
+ally,enemy=[],[]
+gladiator,guard,werewolf,knight,thug=[112,16,3,7,72,48],[11,16,1,3,7,2],[58,12,2,4,20,7],[52,18,2,5,30,10],[32,11,2,4,16,4]
+player_1=[16,15,1,5,8,4]
+individual_ally_wins,individual_enemy_wins=0,0
+allied_team,enemy_team,dead_ally,dead_enemy=0,0,0,0
+combatants_allies,combatants_enemies={},{}
+combat_order=[0,1,2,3,4,5,6,7,8,9]
+team_ally_wins,team_enemy_wins=0,0
+ally_1,ally_2,ally_3,ally_4,ally_5=[],[],[],[],[]
+enemy_1,enemy_2,enemy_3,enemy_4,enemy_5=[],[],[],[],[]
+
+print("Please select the combatants in the format of xvy, up to a maximum of 5v5.")
+print("Where x is the number of allies and y is the number of enemies")
+print("Entering nothing defaults to duel mode")
+combat_type=input(">>>>>>>>>>>>>>>>")
+
+def fighter_selector():
+    global enemy,ally,werewolf,knight,guard,thug,player_1
+    sel_fight=input("Please select the allied fighter---Currently only player_1>>>>")
+    sel_enemy=input("Please select the enemy fighter. werewolf,knight, guard,gladiator or thug. Default is werewolf>>>>>")
+    ally=player_1
+    if sel_enemy=="werewolf" or sel_enemy=="":
+        enemy=werewolf
+    elif sel_enemy=="knight":
+        enemy=knight
+    elif sel_enemy=="guard":
+        enemy=guard
+    elif sel_enemy=="gladiator":
+        enemy=gladiator
+    else:
+        enemy=thug
+    
+def attack_roll_enemy():
+    global ally
+    att_en=random.randint(1,20)
+    att_en=att_en+enemy[3]
+    
+    att_dam_en=random.randint(ally[5],ally[4])
+    if att_en>=ally[1]:
+        ally[0]-=att_dam_en
+    del att_en
     del att_dam_en
+    
+    
+def attack_roll_friend():
+    global enemy
+    att_fr=random.randint(1,20)
+    att_fr=att_fr+ally[3]
+    att_dam_fr=random.randint(enemy[5],enemy[4])
+    if att_fr>=enemy[1]:
+        enemy[0]-=att_dam_fr
+    del att_fr
+    del att_dam_fr
+    
+    
+def initiative():
+    global individual_enemy_wins,individual_ally_wins,ally,enemy
+    ini=random.randint(0,1)
+    if ini==1:
+        
+        while ally[0]>0 and enemy[0]>0:
+            attack_roll_enemy()
+            if ally[0]<=0:
+                break
+            attack_roll_friend()
+        if ally[0]<=0 and enemy[0]<=0:
+            print("Win Counter Error")
+            sys.exit()
+        elif ally[0]<=0:
+            individual_enemy_wins+=1
+
+        elif enemy[0]<=0:
+            individual_ally_wins+=1
+        else:
+            print("Win Counter Error")
+            sys.exit()
+    else:
+        
+        while ally[0]>0 and enemy[0]>0:
+            attack_roll_friend()
+            if enemy[0]<=0:
+                break
+            attack_roll_enemy()
+        if ally[0]<=0 and enemy[0]<=0:
+            print("Win Counter Error")
+            sys.exit()
+        elif ally[0]<=0:
+            individual_enemy_wins=individual_enemy_wins+1
+
+        elif enemy[0]<=0:
+            individual_ally_wins=individual_ally_wins+1
+        else:
+            print("Win Counter Error")
+            sys.exit()
+
+    
+def reset():
+    global ally,enemy
+    ally[0]=16
+    enemy[0]=58
+            
+def times():
+    global individual_ally_wins,individual_enemy_wins
+    amount=int(input("Please input the amount of times you wish to simulate the battle>>>>>"))
+    counter=0
+    while amount!=0:
+        
+        initiative()
+        reset()
+        amount-=1
+        counter+=1
+        
+
+        
+    percentage_ally= (individual_ally_wins/counter) *100
+    percentage_enemy=(individual_enemy_wins/counter)*100
+    print("Ally won "+ str(individual_ally_wins) +" times")
+    print("Enemy won "+ str(individual_enemy_wins)+" times")
+    print("Ally won "+ str(percentage_ally)+"%"+ " of battles")
+    print("Enemy won " + str(percentage_enemy)+ "%"+" of battles")
+    
+    
+def selector_switcher():
+    global combat_type
+    if combat_type!="1v1" and combat_type!="":
+        group()
+    else:
+        individual()
+    
+
+def individual():
+    global ally,enemy,individual_enemy_wins,individual_ally_wins
+    fighter_selector()
+    times()
+    repeater=input("Do you want to run another simulation? y/n>>>>>")
+    if repeater=="y":
+        ally=[]
+        enemy=[]
+        individual_ally_wins=0
+        individual_enemy_wins=0
+        return
+    sys.exit()
+ 
+def percentage_group():
+    
+    print("The allied team won "+str(team_ally_wins)+" times")
+    print("That is a"+str((team_ally_wins/group_counter)*100) +"% win rate")
+    print("The enemy tem won "+str(team_enemy_wins)+" times")
+    print("That is a"+str((team_enemy_wins/group_counter)*100)+"% win rate")
+
+def death_and_victory_counter():
+    if ally_1[0]<=0:
+        dead_ally+=1
+    if allied_team>=2 and ally_2[0]<=0:
+        dead_ally+=1
+    if allied_team>=3 and ally_3[0]<=0:
+        dead_ally+=1
+    if allied_team>=4 and ally_4[0]<=0:
+        dead_ally+=1
+    if allied_team==5 and ally_5[0]<=0:
+        dead_ally+=1
+        
+            
+            
+    if enemy_1[0]<=0:
+        dead_enemy+=1
+    if enemy_team>=2 and enemy_2[0]<=0:
+        dead_enemy+=1
+    if enemy_team>=3 and enemy_3[0]<=0:
+        dead_enemy+=1
+    if enemy_team>=4 and enemy_4[0]<=0:
+        dead_enemy+=1
+    if enemy_team==5 and enemy_5[0]<=0:
+        dead_enemy+=1
+        
+        
+    if dead_ally==allied_team and dead_enemy==enemy_team:
+        print("Death Counter Error")
+        sys.exit()
+    elif dead_ally==allied_team:
+        team_enemy_wins+=1
+        
+    elif dead_enemy==enemy_team:
+        team_ally_wins+=1
+        
+    else:
+        print("Death Counter Error")
+        sys.exit()
+        
+    
+def group_combat():
+    
+    
+    for i in combat_order:
+        att_roll=random.randint(1,20)
+        att_roll=att_roll+combat_order[i[3]]
+        att_dam=random.randint(i[5],i[4])
+        if i==ally_1 or i==ally_2 or i==ally_3 or i==ally_4 or i==ally_5:
+            objective_selector=random.randint(1,(enemy_team-1))
+            if objective_selector==1:
+                objective_selector=enemy_1
+            elif objective_selector==2:
+                objective_selector=enemy_2
+            elif objective_selector==3:
+                objective_selector=enemy_3
+            elif objective_selector==4:
+                objective_selector=enemy_4
+            elif objective_selector==5:
+                objective_selector=enemy_5
+        else:
+            objective_selector=random.randint(1,(allied_team-1))
+            if objective_selector==1:
+                objective_selector=ally_1
+            elif objective_selector==2:
+                objective_selector=ally_2
+            elif objective_selector==3:
+                objective_selector=ally_3
+            elif objective_selector==4:
+                objective_selector=ally_4
+            elif objective_selector==5:
+                objective_selector=ally_5
+        if att_roll>=combat_order[objective_selector[1]]:
+            combat_order[objective_selector[0]]-=att_dam
+            death_and_victory_counter()
+def group_initiative():
+    global allied_team
+    global combatants_allies
+    global combatants_enemies
+    global combat_order
+    global enemy_team
+    global ally_1
+    global ally_2
+    global ally_3
+    global ally_4
+    global ally_5
+    global enemy_1
+    global enemy_2
+    global enemy_3
+    global enemy_4
+    global enemy_5
+    print("Please input the name of the character you wish to use the stats of.")
+    print("Your options are player_1(default)")
+    ally_selector=input(">>>>>>>>>>")
+    
+        
+    if ally_1==[]:
+        if ally_selector=="" or ally_selector=="player_1" or ally_selector=="player 1" or ally_selector=="player1":
+            ally_1=player_1
+            combatants_allies[0]=ally_1
+        else:
+            print("Unknown Ally")
+            sys.exit()
+    elif ally_2==[] and allied_team>1:
+        if ally_selector=="" or ally_selector=="player_1" or ally_selector=="player 1" or ally_selector=="player1":
+            ally_2=player_1
+            combatants_allies[1]=ally_2
+        else:
+            print("Unknown Ally")
+            sys.exit()
+    elif ally_3==[] and allied_team>2:
+        if ally_selector=="" or ally_selector=="player_1" or ally_selector=="player 1" or ally_selector=="player1":
+            ally_3=player_1
+            combatants_allies[2]=ally_3
+        else:
+            print("Unknown Ally")
+            sys.exit()
+    elif ally_4==[] and allied_team>3:
+        if ally_selector=="" or ally_selector=="player_1" or ally_selector=="player 1" or ally_selector=="player1":
+            ally_4=player_1
+            combatants_allies[3]=ally_4
+        else:
+            print("Unknown Ally")
+            sys.exit()
+    elif ally_5==[] and allied_team>4:
+        if ally_selector=="" or ally_selector=="player_1" or ally_selector=="player 1" or ally_selector=="player1":
+            ally_5=player_1
+            combatants_allies[4]=ally_5
+        else:
+            print("Unknown Ally")
+            sys.exit()
+    
+        
+    print("Please input the name of the character you wish to use the stats of.")
+    print("Your options are werewolf(default),thug, knight, guard,gladiator")
+    enemy_selector=input(">>>>>>>>>>")
+        
+    if enemy_1==[]:
+        if enemy_selector=="" or "werewolf":
+            enemy_1=werewolf
+        elif enemy_selector=="thug":
+            enemy_1=thug
+        elif enemy_selector=="knight":
+            enemy_1=knight
+        elif enemy_selector=="guard":
+            enemy_1=guard
+        elif enemy_selector=="gladiator":
+            enemy_1=gladiator
+        else:
+            print("Unknown Enemy")
+            sys.exit()
+        combatants_enemies[0]=enemy_1
+    elif enemy_2==[] and enemy_team>1:
+        if enemy_selector=="" or "werewolf":
+            enemy_2=werewolf
+        elif enemy_selector=="thug":
+            enemy_2=thug
+        elif enemy_selector=="knight":
+            enemy_2=knight
+        elif enemy_selector=="guard":
+            enemy_2=guard
+        elif enemy_selector=="gladiator":
+            enemy_2=gladiator
+        else:
+            print("Unknown Enemy")
+            sys.exit()
+        combatants_enemies[1]=enemy_2
+        
+    elif enemy_3==[] and enemy_team>2:
+        if enemy_selector=="" or "werewolf":
+            enemy_3=werewolf
+        elif enemy_selector=="thug":
+            enemy_3=thug
+        elif enemy_selector=="knight":
+            enemy_3=knight
+        elif enemy_selector=="guard":
+            enemy_3=guard
+        elif enemy_selector=="gladiator":
+            enemy_3=gladiator
+        else:
+            print("Unknown Enemy")
+            sys.exit()
+        combatants_enemies[2]=enemy_3
+    
+    elif enemy_4==[] and enemy_team>3:
+        if enemy_selector=="" or "werewolf":
+            enemy_4=werewolf
+        elif enemy_selector=="thug":
+            enemy_4=thug
+        elif enemy_selector=="knight":
+            enemy_4=knight
+        elif enemy_selector=="guard":
+            enemy_4=guard
+        elif enemy_selector=="gladiator":
+            enemy_4=gladiator
+        else:
+            print("Unknown Enemy")
+            sys.exit()
+        combatants_enemies[3]=enemy_4
+    
+    elif enemy_5==[] and enemy_team>4:
+        if enemy_selector=="" or "werewolf":
+            enemy_5=werewolf
+        elif enemy_selector=="thug":
+            enemy_5=thug
+        elif enemy_selector=="knight":
+            enemy_5=knight
+        elif enemy_selector=="guard":
+            enemy_5=guard
+        elif enemy_selector=="gladiator":
+            enemy_5=gladiator
+        else:
+            print("Unknown Enemy")
+            sys.exit()
+        combatants_enemies[4]=enemy_5
+    
+        
+    while int(len(combat_order))<int((allied_team+enemy_team)):
+        al_or_en=random.randint(0,1)
+        if al_or_en==0:
+            al_rand=random.randint(0,(len(combatants_allies)-1))
+            combat_order[random.randint(0,allied_team+enemy_team)]=combatants_allies[al_rand]
+        else:
+            en_rand=random.randint(0,int(len(combatants_enemies)-1))
+            combat_order[random.randint(0,allied_team+enemy_team)]=combatants_enemies[en_rand]
+        
+        combat_order=list(dict.fromkeys(combat_order))
+        
+    group_combat()
+def group_reset():
+    ally_1=[]
+    ally_2=[]
+    ally_3=[]
+    ally_4=[]
+    ally_5=[]
+    enemy_1=[]
+    enemy_2=[]
+    enemy_3=[]
+    enemy_4=[]
+    enemy_5=[]
+    
+def group_times():
+    group_times_in=input("How many times do you wish to simulate this team battle?")
+    int(group_times_in)
+    for i in range(group_times_in):
+        group()
+        group_reset()
+    percentage_group()
+def group():
+    global combat_type
+    global allied_team
+    global enemy_team
+    
+    if int(combat_type[0])<=5 and int(combat_type[0])>0:
+        allied_team=int(combat_type[0])
+    if int(combat_type[2])<=5 and int(combat_type[2])>0:
+        enemy_team=int(combat_type[2])
+    group_initiative()
+    
+while ally==[] and enemy==[]:
+    selector_switcher() 
+
+
     
     
 def attack_roll_friend():
