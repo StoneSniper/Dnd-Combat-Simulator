@@ -1,0 +1,160 @@
+import sys
+# # # Battle Simulator! # # # 
+# --This is a basic version, that omits many aspects of the DND 5E system, and aims to provide rough estimates, not definite odds--#
+# # Basics # #
+    # Here we define the basic blocks of the combat, so we can call on them later #
+def num():
+   temp_num=input(">>>>Please enter the amount of characters in this group")
+   return temp_num()
+def name():
+    temp_name=input(">>>>Please enter the name or tag for this character")
+    return temp_name()
+def health():
+    temp_health=input(">>>>Please enter the HP of this character")
+    return temp_health()
+def armor():
+    temp_armor=input(">>>>Please enter the AC of this character")
+    return temp_armor
+def weapons():
+    num_weapons=int(input("How many weapons does this character wield? (Maximum 3)"))
+    if num_weapons!=None:
+        if num_weapons==0:
+            return "no weapon"
+        elif num_weapons>3:
+            print("Please enter a value between 0 and 3")
+            weapons()
+        elif num_weapons==1:
+             temp_weapons_a=input("Please enter the main weapon of this character")
+             return temp_weapons_a
+        elif num_weapons==2:
+            temp_weapons_a=input("Please enter the main weapon of this character")
+            temp_weapons_b=input("Please enter the second weapon for this character")
+            return temp_weapons_a + temp_weapons_b
+        elif num_weapons==3:
+            temp_weapons_a=input("Please enter the main weapon of this character")
+            temp_weapons_b=input("Please enter the second weapon for this character")
+            temp_weapons_c=input("Please enter the auxiliary weapon for this character")
+            return temp_weapons_a + temp_weapons_b + temp_weapons_c
+    
+def spells():
+    caster=str(input("Is this character capable of casting spells? Answer Y/N . Not Case-Sensitive")).upper()
+    if caster=="Y" or caster=="N":
+        if caster!="Y":
+            return "not caster"
+        else:
+           does_damage=str(input("Are any of the spells directly damaging? Answer Y/N. Not Case-Sensitive")).upper()
+           if does_damage=="Y" or does_damage=="N":
+               if does_damage!="Y":
+                   return "utility"
+                else:
+                    print("You will now be asked to enter the maximum and minimum damage values your character can inflict")
+                    print("Please assume the attack has landed")
+                    print("Please assume your character always uses the most damaging spell they have")
+                    print("If that spell is an area spell, assume only one enemy fails his save")
+                    damage_max=int(input(">>>Please Enter the maximum damage per spell"))
+                    damage_min=int(input(">>>Please Enter the minimum damage per spell"))
+                    if isinstance(damage_max,int)==True and isinstance(damage_min,int)==True:
+                        uses=int(input(">>>Great! Lastly, please enter the maximum number of uses of that spell your character has"))
+                        spell_damage_calc=[damage_max,damage_min,uses]
+                        return spell_damage_calc
+                    else:
+                        print("You have to be very careful, this is not a stable program yet")
+                        print("Please properly enter your answers next time")
+                        print("You will now need to restart the spells function")
+                        spells()
+           else:
+               print("Please type only Y or N as your answer.Try again,silly.")
+               spells()
+    else:
+        print("Please type only Y or N as your answer")
+        spells()
+def speed():
+    temp_speed=input(">>>>Please enter the speed of this character")
+def damage_roll()
+
+def attack_roll()
+
+def spell_attack()
+
+def spell_dc()
+
+# # Player Characters # #
+    # Here we are attempting to iterate dictionary creation for storing all the appropriate values for each character with #
+    # just one function, cha_num(), defined at the end of this section so that it can call on all the subfunctions it #
+    # depends on.#
+
+def cha_name()
+    name()
+    return temp_name
+    
+def cha_health()
+
+def cha_armor()
+
+def cha_weapons()
+
+def cha_spells()
+    spells()
+    
+
+def cha_speed()
+def cha_num():
+    num()
+    cha_num_final=temp_num
+    cha_dict={}
+    for i in range(cha_num_final):
+        cha_dict["cha {0}".format(i)]={"name": cha_name(),"health": cha_health() , "armor": cha_armor(),\
+                                       "weapons": cha_weapons(), "spells": cha_spells(), "speed" : cha_speed()}
+                                       
+
+
+##Non-Player Characters##
+     #Here we are attempting to iterate dictionary creation for storing all the appropriate values for each character with #
+    #just one function, ncha_num(), defined at the end of this section so that it can call on all the subfunctions it #
+    #depends on. Yes, same as before. Probably could've iterated this too but, cut me /some/ slack, i'm a self-taught noob. #
+
+def ncha_name()
+
+def ncha_health()
+
+def ncha_armor()
+
+def ncha_weapons()
+
+def ncha_spells()
+
+
+def ncha_speed()
+
+
+
+def ncha_num()
+    num()
+    ncha_num_final=temp_num
+    ncha_dict={}
+    for i in range(ncha_num_final):
+        ncha_dict["ncha {0}".format(i)]={"name": ncha_name(),"health": ncha_health() , "armor": ncha_armor(),\
+                                       "weapons": ncha_weapons(), "spells": ncha_spells(), "speed" : ncha_speed()}
+# # Map # #
+def grid_rows()
+
+def grid_columns()
+
+def speed_interpreter()
+
+def map_layout()
+
+
+# # Combat # #
+def turns()
+
+def rounds()
+
+def initiative()
+
+def combat_start()
+
+def combat_end()
+
+
+sys.exit()
